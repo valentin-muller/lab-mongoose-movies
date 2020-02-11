@@ -1,3 +1,8 @@
-<h2>Name: {{oneCeleb.name}}</h2>
-<h2>Occupation: {{oneCeleb.occupation}}</h2>
-<h2>catchPhrase: {{oneCeleb.catchPhrase}}</h2>
+
+<h2>{{#each celeb}}
+    Name: {{this.name}} <br>
+    Occupation: {{this.occupation}} <br>
+    catchPhrase: {{this.catchPhrase}} <br>
+    
+    {{/each}}
+</h2>

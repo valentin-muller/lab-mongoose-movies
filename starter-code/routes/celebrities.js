@@ -15,17 +15,75 @@ celebritiesRouter.get("/", (req, res) => {
     .catch(err => console.log(err));
 });
 
-celebritiesRouter.get("/celebrities/:id", (req, res, next) => {
-    const { _id } = req.query;
+// ------------------------------------------------
 
-    Celebrity.findOne({_id: _id})
-        .then(oneCeleb => {
-            const data = {
-                celeb: oneCeleb
-            };
-            res.render("views/show", data)
-        })
-        .catch(err => console.log(err));
+celebritiesRouter.get("/new", (req, res, next) => {
+    res.render("celebrities/new")
 });
+celebritiesRouter.post("/new", (req, res) => {
+const { name, occupation, catchPhrase } = req.body;
+
+    Celebrity.create({ name, occupation, catchPhrase })
+      .then(() => {
+        res.redirect("/celebrities")
+    }).catch((err) => {
+        console.log(err)
+    });
+
+    
+})
+// ------------------------------------------------
+
+
+celebritiesRouter.get("/:id", (req, res, next) => {
+    Celebrity.findById(req.params.id)
+    .then((celebId) => {
+        const data = {
+            celeb: celebId
+        };
+        res.render("celebrities/show", data)
+    }).catch((err) => {
+        console.log(err);
+    });
+});
+
+celebritiesRouter.post("/:id/delete", (req, res, next) => {
+    Celebrity.findByIdAndRemove(req.params.id)
+         .then(() => {
+            res.redirect("/celebrities")
+        }).catch((err) => {
+            console.log(err);
+            
+        });
+})
+
+// ------------------------------------------------
+
+celebritiesRouter.get("/:id/edit", (req, res, next) => {
+    Celebrity.findById(req.params.id)
+        .then((celebrityEdit) => {
+            const data={
+                editedCeleb :celebrityEdit
+            }
+            res.render("/celebrities/edit",data)
+        })
+        .catch((err) => {
+            console.log(err);
+        }); 
+});
+
+
+celebritiesRouter.post("/:id", (req, res, next) => {
+    const {name, occupation, catchPhrase} = req.body;
+    Celebrity.update(req.params.id, {name, occupation, catchPhrase})
+        .then(() => {
+            res.redirect("/celebrities")
+        }).catch((err) => {
+            console.log(err);
+        });
+})
+
+// ------------------------------------------------
+
 
 module.exports = celebritiesRouter;
